@@ -1,0 +1,712 @@
+{
+  "info": {
+    "name": "E-Commerce API",
+    "description": "Complete API collection for E-Commerce Backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"]
+        },
+        "description": "Check if the server is running"
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            },
+            "description": "Register a new user"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"john@example.com\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "description": "Login user and get JWT token"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            },
+            "description": "Get current logged-in user details"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products?page=1&limit=10&search=&category=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all products with pagination and filters"
+          }
+        },
+        {
+          "name": "Get Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products", "categories"]
+            },
+            "description": "Get all available product categories"
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a specific product by ID"
+          }
+        },
+        {
+          "name": "Create Product (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Product Name\", \"description\": \"Product Description\", \"price\": 99.99, \"category\": \"Electronics\", \"stock\": 100, \"image\": \"https://example.com/image.jpg\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products"]
+            },
+            "description": "Create a new product (Admin only)"
+          }
+        },
+        {
+          "name": "Update Product (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"price\": 89.99, \"stock\": 50}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update product details (Admin only)"
+          }
+        },
+        {
+          "name": "Delete Product (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Delete a product (Admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cart"]
+            },
+            "description": "Get current user's cart"
+          }
+        },
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\": \"<product_id>\", \"quantity\": 1}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart/items",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cart", "items"]
+            },
+            "description": "Add or update item in cart"
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"quantity\": 3}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart/items/:productId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cart", "items", ":productId"],
+              "variable": [
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update quantity of an item in cart"
+          }
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cart/items/:productId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cart", "items", ":productId"],
+              "variable": [
+                {
+                  "key": "productId",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Remove item from cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Place Order from Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"shippingAddress\": {\"street\": \"123 Main St\", \"city\": \"New York\", \"state\": \"NY\", \"zipCode\": \"10001\"}, \"paymentMethod\": \"card\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders"]
+            },
+            "description": "Place order using items from cart"
+          }
+        },
+        {
+          "name": "Buy Now",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"productId\": \"<product_id>\", \"quantity\": 1, \"shippingAddress\": {\"street\": \"123 Main St\", \"city\": \"New York\", \"state\": \"NY\", \"zipCode\": \"10001\"}, \"paymentMethod\": \"card\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/buy-now",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", "buy-now"]
+            },
+            "description": "Buy a product directly without adding to cart"
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders"]
+            },
+            "description": "Get current user's orders"
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/orders/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "orders", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get specific order details"
+          }
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "profile"]
+            },
+            "description": "Get current user's profile"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Jane Doe\", \"phone\": \"+1-555-0123\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "profile"]
+            },
+            "description": "Update user profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "dashboard"]
+            },
+            "description": "Get admin dashboard statistics (Admin only)"
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "orders"]
+            },
+            "description": "Get all orders in the system (Admin only)"
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"status\": \"shipped\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/orders/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "orders", ":id", "status"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Update order status (Admin only)"
+          }
+        },
+        {
+          "name": "Export All Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/orders/export",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "orders", "export"]
+            },
+            "description": "Export all orders to CSV (Admin only)"
+          }
+        },
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/customers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "customers"]
+            },
+            "description": "Get all customers (Admin only)"
+          }
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/customers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "customers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get a specific customer details (Admin only)"
+          }
+        },
+        {
+          "name": "Get Customer Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/customers/:id/orders",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "customers", ":id", "orders"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Get all orders of a specific customer (Admin only)"
+          }
+        },
+        {
+          "name": "Export Customers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/customers/export",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "customers", "export"]
+            },
+            "description": "Export all customers to CSV (Admin only)"
+          }
+        },
+        {
+          "name": "Export Customer Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/customers/:id/orders/export",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "customers", ":id", "orders", "export"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "Export orders of a specific customer to CSV (Admin only)"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT token from login response"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT token from admin login"
+    }
+  ]
+}
