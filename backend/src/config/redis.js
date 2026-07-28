@@ -33,6 +33,13 @@ const connectRedis = async () => {
   return redisClient;
 };
 
-const getRedis = () => redisClient;
+// The fix: gate on connection status, not just "does a client object
+// exist." A client constructed against a dead URL is still a non-null
+// object forever — status is the only thing that actually reflects
+// whether commands sent through it can succeed. Callers (buildStore in
+// rateLimit.middleware.js) treat a null return as "use MemoryStore
+// instead," so this is what makes that fallback actually reachable once
+// Redis is down, not just at startup.
+const getRedis = () => (redisClient && redisClient.status === "ready" ? redisClient : null);
 
 module.exports = { connectRedis, getRedis };

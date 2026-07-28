@@ -5,12 +5,48 @@ const Cart = require("../../models/cart.model");
 const cartService = require("../cart/cart.service");
 const { sanitizePagination } = require("../../utils/pagination");
 
+const User = require("../../models/user.model");
+const notificationService = require("../notification/notification.service");
+
 const VALID_TRANSITIONS = {
   PLACED: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["PREPARING", "CANCELLED"],
   PREPARING: ["DELIVERED"],
   DELIVERED: [],
   CANCELLED: [],
+};
+
+/**
+ * Fire-and-log, never fire-and-throw. Called after a transaction has
+ * already committed (order creation) or after order.save() has already
+ * persisted (status update) — by the time this runs, the state change is
+ * final. A flaky mail provider must never roll back or fail a real order
+ * or delivery/cancellation event just because the notification leg had a
+ * bad network moment.
+ */
+const notifyOrderStatus = async (order, type) => {
+  const user = await User.findById(order.userId).select("email name");
+  if (!user) {
+    logger.error("Could not send status email — user not found", {
+      orderId: order._id.toString(),
+      type,
+    });
+    return;
+  }
+
+  const result = await notificationService.sendOrderStatusEmail({
+    toEmail: user.email,
+    toName: user.name,
+    order,
+    type,
+  });
+
+  if (!result.sent) {
+    logger.error(`Order ${type} email dispatch failed`, {
+      orderId: order._id.toString(),
+      reason: result.reason,
+    });
+  }
 };
 
 const placeOrderFromCart = async (userId, deliveryAddress) => {
@@ -98,6 +134,7 @@ const placeOrderFromCart = async (userId, deliveryAddress) => {
     await session.endSession();
   }
 
+  await notifyOrderStatus(order, "PLACED");
   return order;
 };
 
@@ -143,6 +180,7 @@ const buyNow = async (userId, productId, quantity, deliveryAddress) => {
   } finally {
     await session.endSession();
   }
+  await notifyOrderStatus(order, "PLACED");
 
   return order;
 };
@@ -207,6 +245,10 @@ const updateOrderStatus = async (orderId, newStatus) => {
 
   order.status = newStatus;
   await order.save();
+
+   if (newStatus === "DELIVERED" || newStatus === "CANCELLED") {
+    await notifyOrderStatus(order, newStatus);
+  }
   return order;
 };
 
